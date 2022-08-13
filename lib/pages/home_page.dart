@@ -39,7 +39,8 @@ class _HomePageState extends State<HomePage> {
                 height: 80,
               ),
               divider12,
-              Row(mainAxisAlignment: MainAxisAlignment.center,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
                     "24",
@@ -106,6 +107,27 @@ class _HomePageState extends State<HomePage> {
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(14.0),
                     borderSide: BorderSide.none,
+                  ),
+                ),
+              ),
+              divider20,
+              SizedBox(
+                width: double.infinity,
+                height: 52.0,
+                child: ElevatedButton.icon(
+                  onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                    primary: Color(0xff5858E9),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(14.0),
+                    ),
+                  ),
+                  icon: Icon(Icons.search),
+                  label: Text(
+                    "Buscar ahora",
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ),
               ),
