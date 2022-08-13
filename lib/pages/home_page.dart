@@ -132,6 +132,13 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
               ),
+              divider30,
+              Text(
+                "Pronóstico del clima",
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
               divider20,
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
