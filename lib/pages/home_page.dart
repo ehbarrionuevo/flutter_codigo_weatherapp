@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_codigo_weather/ui/general/colors.dart';
 import 'package:flutter_codigo_weather/ui/widgets/general_widgets.dart';
+import 'package:flutter_codigo_weather/ui/widgets/item_forecast_widget.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class HomePage extends StatefulWidget {
@@ -129,6 +130,21 @@ class _HomePageState extends State<HomePage> {
                       fontWeight: FontWeight.w600,
                     ),
                   ),
+                ),
+              ),
+              divider20,
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                physics: const BouncingScrollPhysics(),
+                child: Row(
+                  children: [
+                    ItemForecastWidget(),
+                    ItemForecastWidget(),
+                    ItemForecastWidget(),
+                    ItemForecastWidget(),
+                    ItemForecastWidget(),
+                    ItemForecastWidget(),
+                  ],
                 ),
               ),
             ],
