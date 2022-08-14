@@ -36,6 +36,8 @@ class _HomePageState extends State<HomePage> {
           isLoading = false;
           setState(() {});
         } else {
+          isLoading = false;
+          setState(() {});
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               backgroundColor: Color(0xffFA595D),
@@ -258,7 +260,7 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ),
-          Container(
+          isLoading ? Container(
             color: kBrandPrimaryColor.withOpacity(0.94),
             child: const Center(
               child: SizedBox(
@@ -270,7 +272,7 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
             ),
-          ),
+          ) : const SizedBox(),
         ],
       ),
     );
