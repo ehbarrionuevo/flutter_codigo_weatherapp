@@ -1,8 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_codigo_weather/ui/general/colors.dart';
 import 'package:flutter_codigo_weather/ui/widgets/general_widgets.dart';
 import 'package:flutter_codigo_weather/ui/widgets/item_forecast_widget.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:http/http.dart' as http;
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -12,6 +15,18 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+
+    
+  getDataWeather() async{
+    String _path = "https://api.openweathermap.org/data/2.5/weather?q=Santiago&appid=22ba7a8b1469e0947bdc757870693292";
+    Uri _uri = Uri.parse(_path);
+    http.Response response = await http.get(_uri);
+    Map<String, dynamic> weatherMap = json.decode(response.body);
+    print(weatherMap);
+
+  }
+  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -116,7 +131,9 @@ class _HomePageState extends State<HomePage> {
                 width: double.infinity,
                 height: 50.0,
                 child: ElevatedButton.icon(
-                  onPressed: () {},
+                  onPressed: () {
+                    getDataWeather();
+                  },
                   style: ElevatedButton.styleFrom(
                     primary: Color(0xff5858E9),
                     shape: RoundedRectangleBorder(
