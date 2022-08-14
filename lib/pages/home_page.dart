@@ -16,14 +16,19 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
 
+  String cityName = "";
+  String country = "";
+  double temp = 0;
     
   getDataWeather() async{
-    String _path = "https://api.openweathermap.org/data/2.5/weather?q=Santiago&appid=22ba7a8b1469e0947bdc757870693292";
+    String _path = "https://api.openweathermap.org/data/2.5/weather?q=Bogota&appid=22ba7a8b1469e0947bdc757870693292";
     Uri _uri = Uri.parse(_path);
     http.Response response = await http.get(_uri);
     Map<String, dynamic> weatherMap = json.decode(response.body);
-    print(weatherMap);
-
+    country = weatherMap["sys"]["country"];
+    cityName = weatherMap["name"];
+    temp = weatherMap["main"]["temp"];
+    setState((){});
   }
   
 
@@ -81,7 +86,7 @@ class _HomePageState extends State<HomePage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    "Arequipa,",
+                    "$cityName,",
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 15.0,
@@ -89,7 +94,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                   divider3Width,
                   Text(
-                    "PE",
+                    country,
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 15.0,
