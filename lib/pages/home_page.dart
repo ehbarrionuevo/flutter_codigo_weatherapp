@@ -22,41 +22,45 @@ class _HomePageState extends State<HomePage> {
   String cityName = "";
   String country = "";
   double temp = 0;
+  bool isLoading = false;
 
   getData() {
-    apiService
-        .getDataWeather(_searchController.text)
-        .then((WeatherModel? value) {
-      if (value != null) {
-        cityName = value.name;
-        country = value.sys.country;
-        temp = value.main.temp - 273.15;
-        setState(() {});
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            backgroundColor: Color(0xffFA595D),
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(14.0),
+    isLoading = true;
+    setState(() {});
+    apiService.getDataWeather(_searchController.text).then(
+      (WeatherModel? value) {
+        if (value != null) {
+          cityName = value.name;
+          country = value.sys.country;
+          temp = value.main.temp - 273.15;
+          isLoading = false;
+          setState(() {});
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              backgroundColor: Color(0xffFA595D),
+              behavior: SnackBarBehavior.floating,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(14.0),
+              ),
+              content: Row(
+                children: [
+                  const Icon(
+                    Icons.warning_amber,
+                    color: Colors.white,
+                  ),
+                  divider3Width,
+                  divider3Width,
+                  const Text(
+                    "Ciudad no encontrada, inténtalo nuevamente.",
+                  ),
+                ],
+              ),
             ),
-            content: Row(
-              children: [
-                Icon(
-                  Icons.warning_amber,
-                  color: Colors.white,
-                ),
-                divider3Width,
-                divider3Width,
-                Text(
-                  "Ciudad no encontrada, inténtalo nuevamente.",
-                ),
-              ],
-            ),
-          ),
-        );
-      }
-    });
+          );
+        }
+      },
+    );
   }
 
   @override
@@ -77,179 +81,197 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            children: [
-              Image.asset(
-                'assets/images/noche.png',
-                height: 80,
-              ),
-              divider12,
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
                 children: [
-                  Text(
-                    temp.toStringAsFixed(1),
+                  Image.asset(
+                    'assets/images/noche.png',
+                    height: 80,
+                  ),
+                  divider12,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        temp.toStringAsFixed(1),
+                        style: TextStyle(
+                          fontSize: 60.0,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white,
+                        ),
+                      ),
+                      Text(
+                        "°C",
+                        style: TextStyle(
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
+                  divider3,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "$cityName,",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 15.0,
+                        ),
+                      ),
+                      divider3Width,
+                      Text(
+                        country,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 15.0,
+                        ),
+                      ),
+                    ],
+                  ),
+                  divider30,
+                  TextField(
+                    controller: _searchController,
                     style: TextStyle(
-                      fontSize: 60.0,
-                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                    ),
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: Colors.white.withOpacity(0.06),
+                      hintText: "Ingresa tu ciudad",
+                      hintStyle: TextStyle(
+                        color: Colors.white.withOpacity(0.4),
+                      ),
+                      prefixIcon: SvgPicture.asset(
+                        'assets/icons/building.svg',
+                        color: Colors.white.withOpacity(0.4),
+                        fit: BoxFit.scaleDown,
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 14.0, vertical: 15.0),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(14.0),
+                        borderSide: BorderSide.none,
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(14.0),
+                        borderSide: BorderSide.none,
+                      ),
+                    ),
+                  ),
+                  divider20,
+                  SizedBox(
+                    width: double.infinity,
+                    height: 50.0,
+                    child: ElevatedButton.icon(
+                      onPressed: () {
+                        getData();
+                      },
+                      style: ElevatedButton.styleFrom(
+                        primary: Color(0xff5858E9),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(14.0),
+                        ),
+                      ),
+                      icon: Icon(Icons.search),
+                      label: Text(
+                        "Buscar ahora",
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ),
+                  divider30,
+                  Text(
+                    "Pronóstico del clima",
+                    style: TextStyle(
                       color: Colors.white,
                     ),
                   ),
-                  Text(
-                    "°C",
-                    style: TextStyle(
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.w400,
-                      color: Colors.white,
+                  divider20,
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    physics: const BouncingScrollPhysics(),
+                    child: Row(
+                      children: [
+                        ItemForecastWidget(),
+                        ItemForecastWidget(),
+                        ItemForecastWidget(),
+                        ItemForecastWidget(),
+                        ItemForecastWidget(),
+                        ItemForecastWidget(),
+                      ],
                     ),
                   ),
-                ],
-              ),
-              divider3,
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "$cityName,",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 15.0,
-                    ),
-                  ),
-                  divider3Width,
-                  Text(
-                    country,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 15.0,
-                    ),
-                  ),
-                ],
-              ),
-              divider30,
-              TextField(
-                controller: _searchController,
-                style: TextStyle(
-                  color: Colors.white,
-                ),
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: Colors.white.withOpacity(0.06),
-                  hintText: "Ingresa tu ciudad",
-                  hintStyle: TextStyle(
-                    color: Colors.white.withOpacity(0.4),
-                  ),
-                  prefixIcon: SvgPicture.asset(
-                    'assets/icons/building.svg',
-                    color: Colors.white.withOpacity(0.4),
-                    fit: BoxFit.scaleDown,
-                  ),
-                  contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 14.0, vertical: 15.0),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(14.0),
-                    borderSide: BorderSide.none,
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(14.0),
-                    borderSide: BorderSide.none,
-                  ),
-                ),
-              ),
-              divider20,
-              SizedBox(
-                width: double.infinity,
-                height: 50.0,
-                child: ElevatedButton.icon(
-                  onPressed: () {
-                    getData();
-                  },
-                  style: ElevatedButton.styleFrom(
-                    primary: Color(0xff5858E9),
-                    shape: RoundedRectangleBorder(
+                  divider40,
+                  divider40,
+                  Container(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 14.0, vertical: 28.0),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.06),
                       borderRadius: BorderRadius.circular(14.0),
                     ),
-                  ),
-                  icon: Icon(Icons.search),
-                  label: Text(
-                    "Buscar ahora",
-                    style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-              ),
-              divider30,
-              Text(
-                "Pronóstico del clima",
-                style: TextStyle(
-                  color: Colors.white,
-                ),
-              ),
-              divider20,
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                physics: const BouncingScrollPhysics(),
-                child: Row(
-                  children: [
-                    ItemForecastWidget(),
-                    ItemForecastWidget(),
-                    ItemForecastWidget(),
-                    ItemForecastWidget(),
-                    ItemForecastWidget(),
-                    ItemForecastWidget(),
-                  ],
-                ),
-              ),
-              divider40,
-              divider40,
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 14.0, vertical: 28.0),
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.06),
-                  borderRadius: BorderRadius.circular(14.0),
-                ),
-                width: double.infinity,
-                child: Stack(
-                  clipBehavior: Clip.none,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    width: double.infinity,
+                    child: Stack(
+                      clipBehavior: Clip.none,
                       children: [
-                        Text(
-                          "15 minutes ago",
-                          style: TextStyle(
-                            color: Colors.white.withOpacity(0.7),
-                          ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "15 minutes ago",
+                              style: TextStyle(
+                                color: Colors.white.withOpacity(0.7),
+                              ),
+                            ),
+                            divider12,
+                            Text(
+                              "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt",
+                              style: TextStyle(
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
                         ),
-                        divider12,
-                        Text(
-                          "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt",
-                          style: TextStyle(
-                            color: Colors.white,
+                        Positioned(
+                          top: -50,
+                          right: 0,
+                          child: Image.asset(
+                            'assets/images/noche.png',
+                            height: 80,
                           ),
                         ),
                       ],
                     ),
-                    Positioned(
-                      top: -50,
-                      right: 0,
-                      child: Image.asset(
-                        'assets/images/noche.png',
-                        height: 80,
-                      ),
-                    ),
-                  ],
+                  ),
+                  divider40,
+                  divider40,
+                ],
+              ),
+            ),
+          ),
+          Container(
+            color: kBrandPrimaryColor.withOpacity(0.94),
+            child: const Center(
+              child: SizedBox(
+                width: 20,
+                height: 20,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2.0,
+                  color: Color(0xff5858E9),
                 ),
               ),
-              divider40,
-              divider40,
-            ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }
