@@ -25,6 +25,13 @@ class _HomePageState extends State<HomePage> {
   double temp = 0;
   bool isLoading = false;
 
+  @override
+  initState(){
+    super.initState();
+    getDataGeolocator();
+  }
+
+
   getData() {
     isLoading = true;
     setState(() {});
