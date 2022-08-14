@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_codigo_weather/models/weather_model.dart';
 import 'package:flutter_codigo_weather/ui/general/colors.dart';
 import 'package:flutter_codigo_weather/ui/widgets/general_widgets.dart';
 import 'package:flutter_codigo_weather/ui/widgets/item_forecast_widget.dart';
@@ -25,6 +26,11 @@ class _HomePageState extends State<HomePage> {
     Uri _uri = Uri.parse(_path);
     http.Response response = await http.get(_uri);
     Map<String, dynamic> weatherMap = json.decode(response.body);
+
+    WeatherModel weatherModel = WeatherModel.fromJson(weatherMap);
+
+    print(weatherModel);
+
     country = weatherMap["sys"]["country"];
     cityName = weatherMap["name"];
     temp = weatherMap["main"]["temp"];
