@@ -154,14 +154,17 @@ class _HomePageState extends State<HomePage> {
                   ],
                 ),
               ),
-              divider20,
+              divider40,
+              divider40,
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 14.0, vertical: 28.0),
                 decoration: BoxDecoration(
                   color: Colors.white.withOpacity(0.06),
+                  borderRadius: BorderRadius.circular(14.0),
                 ),
                 width: double.infinity,
                 child: Stack(
+                  clipBehavior: Clip.none,
                   children: [
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -181,9 +184,19 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ],
                     ),
+                    Positioned(
+                      top: -50,
+                      right: 0,
+                      child: Image.asset(
+                        'assets/images/noche.png',
+                        height: 80,
+                      ),
+                    ),
                   ],
                 ),
               ),
+              divider40,
+              divider40,
             ],
           ),
         ),
