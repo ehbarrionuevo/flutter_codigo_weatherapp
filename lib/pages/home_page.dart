@@ -22,18 +22,42 @@ class _HomePageState extends State<HomePage> {
   String cityName = "";
   String country = "";
   double temp = 0;
-    
-  getData(){
-    apiService.getDataWeather(_searchController.text).then((WeatherModel? value){
-      if(value != null){
+
+  getData() {
+    apiService
+        .getDataWeather(_searchController.text)
+        .then((WeatherModel? value) {
+      if (value != null) {
         cityName = value.name;
         country = value.sys.country;
         temp = value.main.temp - 273.15;
-        setState((){});
+        setState(() {});
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: Color(0xffFA595D),
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(14.0),
+            ),
+            content: Row(
+              children: [
+                Icon(
+                  Icons.warning_amber,
+                  color: Colors.white,
+                ),
+                divider3Width,
+                divider3Width,
+                Text(
+                  "Ciudad no encontrada, inténtalo nuevamente.",
+                ),
+              ],
+            ),
+          ),
+        );
       }
     });
   }
-  
 
   @override
   Widget build(BuildContext context) {
