@@ -114,7 +114,7 @@ class _HomePageState extends State<HomePage> {
               divider20,
               SizedBox(
                 width: double.infinity,
-                height: 52.0,
+                height: 50.0,
                 child: ElevatedButton.icon(
                   onPressed: () {},
                   style: ElevatedButton.styleFrom(
@@ -151,6 +151,36 @@ class _HomePageState extends State<HomePage> {
                     ItemForecastWidget(),
                     ItemForecastWidget(),
                     ItemForecastWidget(),
+                  ],
+                ),
+              ),
+              divider20,
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 14.0, vertical: 28.0),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.06),
+                ),
+                width: double.infinity,
+                child: Stack(
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "15 minutes ago",
+                          style: TextStyle(
+                            color: Colors.white.withOpacity(0.7),
+                          ),
+                        ),
+                        divider12,
+                        Text(
+                          "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt",
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
               ),
