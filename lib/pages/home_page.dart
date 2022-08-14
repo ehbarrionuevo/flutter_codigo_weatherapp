@@ -7,6 +7,7 @@ import 'package:flutter_codigo_weather/ui/general/colors.dart';
 import 'package:flutter_codigo_weather/ui/widgets/general_widgets.dart';
 import 'package:flutter_codigo_weather/ui/widgets/item_forecast_widget.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 
 class HomePage extends StatefulWidget {
@@ -65,6 +66,27 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  getDataGeolocator(){
+    isLoading = true;
+    setState((){});
+    Geolocator.getCurrentPosition().then((value){
+      apiService.getDataWeatherLocation(value).then((value){
+        if (value != null) {
+          cityName = value.name;
+          country = value.sys.country;
+          temp = value.main.temp - 273.15;
+          isLoading = false;
+          setState(() {});
+        } else {
+          isLoading = false;
+          setState(() {});
+        }
+      });
+    });
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -76,7 +98,9 @@ class _HomePageState extends State<HomePage> {
         centerTitle: true,
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              getDataGeolocator();
+            },
             icon: Icon(
               Icons.location_on,
             ),
