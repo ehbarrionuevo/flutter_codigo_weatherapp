@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_codigo_weather/models/weather_model.dart';
+import 'package:flutter_codigo_weather/services/api_service.dart';
 import 'package:flutter_codigo_weather/ui/general/colors.dart';
 import 'package:flutter_codigo_weather/ui/widgets/general_widgets.dart';
 import 'package:flutter_codigo_weather/ui/widgets/item_forecast_widget.dart';
@@ -16,25 +17,21 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-
+  final APIService apiService = APIService();
+  final TextEditingController _searchController = TextEditingController();
   String cityName = "";
   String country = "";
   double temp = 0;
     
-  getDataWeather() async{
-    String _path = "https://api.openweathermap.org/data/2.5/weather?q=Bogota&appid=22ba7a8b1469e0947bdc757870693292";
-    Uri _uri = Uri.parse(_path);
-    http.Response response = await http.get(_uri);
-    Map<String, dynamic> weatherMap = json.decode(response.body);
-
-    WeatherModel weatherModel = WeatherModel.fromJson(weatherMap);
-
-    print(weatherModel);
-
-    country = weatherMap["sys"]["country"];
-    cityName = weatherMap["name"];
-    temp = weatherMap["main"]["temp"];
-    setState((){});
+  getData(){
+    apiService.getDataWeather(_searchController.text).then((WeatherModel? value){
+      if(value != null){
+        cityName = value.name;
+        country = value.sys.country;
+        temp = value.main.temp - 273.15;
+        setState((){});
+      }
+    });
   }
   
 
@@ -70,7 +67,7 @@ class _HomePageState extends State<HomePage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    "24",
+                    temp.toStringAsFixed(1),
                     style: TextStyle(
                       fontSize: 60.0,
                       fontWeight: FontWeight.w600,
@@ -110,6 +107,7 @@ class _HomePageState extends State<HomePage> {
               ),
               divider30,
               TextField(
+                controller: _searchController,
                 style: TextStyle(
                   color: Colors.white,
                 ),
@@ -143,7 +141,7 @@ class _HomePageState extends State<HomePage> {
                 height: 50.0,
                 child: ElevatedButton.icon(
                   onPressed: () {
-                    getDataWeather();
+                    getData();
                   },
                   style: ElevatedButton.styleFrom(
                     primary: Color(0xff5858E9),
